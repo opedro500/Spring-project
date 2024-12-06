@@ -1,6 +1,6 @@
-package com.imd.projeto1.model;
+package com.imd.projeto2.models;
 
-import com.imd.projeto1.DTO.ProdutoDTO;
+import com.imd.projeto2.DTO.ProdutoDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = "produtos")
-public class ProdutoEntity {
+public class ProdutoModel {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id_produto;
     private String nome;
@@ -25,7 +26,10 @@ public class ProdutoEntity {
     private Tipo tipo;
     private String lote;
 
-    public void atualizarAtributosNaoNulos(ProdutoDTO produtoDTO) {
+    @ManyToMany(mappedBy = "produtos")
+    List<PedidoModel> pedidos;
+
+    public void carregarDTO(ProdutoDTO produtoDTO) {
         if (produtoDTO.nome() != null) {
             this.nome = produtoDTO.nome();
         }

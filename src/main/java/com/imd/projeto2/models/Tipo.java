@@ -1,4 +1,4 @@
-package com.imd.projeto1.model;
+package com.imd.projeto2.models;
 
 public enum Tipo {
     ALIMENTICIO,

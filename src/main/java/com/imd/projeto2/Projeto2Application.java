@@ -1,13 +1,13 @@
-package com.imd.projeto1;
+package com.imd.projeto2;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Projeto1Application {
+public class Projeto2Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Projeto1Application.class, args);
+		SpringApplication.run(Projeto2Application.class, args);
 	}
 
 }

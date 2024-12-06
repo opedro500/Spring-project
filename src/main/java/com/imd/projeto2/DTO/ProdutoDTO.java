@@ -1,6 +1,6 @@
-package com.imd.projeto1.DTO;
+package com.imd.projeto2.DTO;
 
-import com.imd.projeto1.model.Tipo;
+import com.imd.projeto2.models.Tipo;
 
 import java.time.LocalDate;
 
