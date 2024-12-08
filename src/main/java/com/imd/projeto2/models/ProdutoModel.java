@@ -1,5 +1,6 @@
 package com.imd.projeto2.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.imd.projeto2.DTO.ProdutoDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class ProdutoModel {
     private Tipo tipo;
     private String lote;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "produtos")
     List<PedidoModel> pedidos;
 

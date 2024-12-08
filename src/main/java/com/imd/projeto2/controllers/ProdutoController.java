@@ -42,7 +42,13 @@ public class ProdutoController {
 
     @PutMapping("/atualizar/{id}")
     public ResponseEntity<Object> atualizarProduto(@PathVariable(value = "id") Long id, @RequestBody ProdutoDTO produtoDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.patchProduct(id, produtoDTO));
+        var product = service.putProduct(id, produtoDTO);
+
+        if (product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado.");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body("Produto atualizado com sucesso.");
     }
 
     @DeleteMapping("/excluir/{id}")
@@ -53,7 +59,7 @@ public class ProdutoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado.");
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto excluído.");
+        return ResponseEntity.status(HttpStatus.OK).body("Produto excluído com sucesso.");
     }
 
 }

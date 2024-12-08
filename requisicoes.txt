@@ -1,0 +1,152 @@
+========================== CLIENTES ==========================
+
+GET localhost:8080/clientes/resgatar
+
+GET localhost:8080/clientes/resgatar/1
+
+POST localhost:8080/clientes/cadastrar
+{
+	"nome": "Pedro",
+	"cpf": "112.702.624-08",
+	"genero": 0,
+	"data_nascimento": "2003-10-10"
+}
+{
+	"nome": "Júlia",
+	"cpf": "027.645.414-65",
+	"genero": 1,
+	"data_nascimento": "1990-02-10"
+}
+{
+	"nome": "Larissa",
+	"cpf": "478.900.480-50",
+	"genero": 1,
+	"data_nascimento": "2005-02-10"
+}
+{
+	"nome": "CPF inválido",
+	"cpf": "000.000.000-00",
+	"genero": 0,
+	"data_nascimento": "2003-10-10"
+}
+
+PUT localhost:8080/clientes/atualizar/1
+{
+	"nome": "Marcos",
+	"data_nascimento": "2005-10-10"
+}
+
+PATCH localhost:8080/clientes/desativar/1
+
+PATCH localhost:8080/clientes/ativar/1
+
+DELETE localhost:8080/clientes/excluir/1
+
+========================== PRODUTOS ==========================
+
+GET localhost:8080/produtos/resgatar
+
+GET localhost:8080/produtos/resgatar/1
+
+POST localhost:8080/produtos/cadastrar
+{
+	"nome": "Detergente",
+	"marca": "Limpol",
+	"data_fabricacao": "2024-05-05",
+	"tipo": 3,
+	"lote": "A3"
+}
+{
+	"nome": "Creme dental",
+	"marca": "Colgate",
+	"data_fabricacao": "2024-01-01",
+	"data_validade": "2026-05-01",
+	"tipo": 2,
+	"lote": "B1"
+}
+{
+	"nome": "Celular",
+	"marca": "Apple",
+	"data_fabricacao": "2023-12-20",
+	"tipo": 4,
+	"lote": "ZG1"
+}
+{
+	"nome": "Batom",
+	"marca": "Avon",
+	"data_fabricacao": "2024-05-01",
+	"data_validade": "2026-05-01",
+	"tipo": 1,
+	"lote": "CS1"
+}
+{
+	"nome": "Macarrão",
+	"marca": "Vitarela",
+	"data_fabricacao": "2024-05-10",
+	"data_validade": "2028-05-01",
+	"tipo": 0,
+	"lote": "A66"
+}
+{
+	"nome": "Frango",
+	"marca": "Sadia",
+	"data_fabricacao": "2022-01-01",
+	"data_validade": "2025-05-01",
+	"tipo": 0,
+	"lote": "PF44"
+}
+
+PUT localhost:8080/produtos/atualizar/1
+{
+	"data_fabricacao": "2023-10-10"
+}
+
+DELETE localhost:8080/produtos/excluir/1
+
+========================== PEDIDOS ==========================
+
+GET localhost:8080/pedidos/resgatar
+
+GET localhost:8080/pedidos/resgatar/1
+
+POST localhost:8080/pedidos/cadastrar
+{
+	"codigo": "COD1",
+	"id_cliente": 1,
+	"ids_produtos": [1, 2, 3]
+}
+{
+	"codigo": "COD2"
+	"id_cliente": 2,
+    "ids_produtos": [2, 3]
+}
+
+PATCH localhost:8080/pedidos/atualizar/1
+{
+	"codigo": "COD45 ALTERADO"
+	"ïd_cliente": 3
+}
+
+PATCH localhost:8080/pedidos/atualizar-produtos
+{
+	"ids_produtos": [3, 4, 5, 6],
+	"id_pedido": 1
+}
+
+PATCH localhost:8080/pedidos/inserir-produto
+{
+	"id_produto": 2,
+	"id_pedido": 1
+}
+
+PATCH localhost:8080/pedidos/remover-produto
+{
+	"id_produto": 5,
+	"id_pedido": 1
+}
+
+PATCH localhost:8080/pedidos/desativar/1
+
+PATCH localhost:8080/pedidos/ativar/1
+
+DELETE localhost:8080/pedidos/excluir/1

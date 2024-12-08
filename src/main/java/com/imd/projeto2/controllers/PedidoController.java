@@ -24,7 +24,7 @@ public class PedidoController {
         var order = service.getOrderById(id);
 
         if (order == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não encontrado.");
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(order);
@@ -35,26 +35,15 @@ public class PedidoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.postOrder(pedidoDTO));
     }
 
-    @PatchMapping("/atualizar-cliente")
-    public ResponseEntity<Object> atualizarClienteEmPedido(@RequestBody @Valid ClientePedidoDTO clientePedidoDTO) {
-        var order = service.patchClientInOrder(clientePedidoDTO.id_cliente(), clientePedidoDTO.id_pedido());
+    @PatchMapping("/atualizar/{id}")
+    public ResponseEntity<Object> atualizarPedido(@PathVariable(value = "id") Long id, @RequestBody PedidoDTO pedidoDTO) {
+        var order = service.patchOrder(id, pedidoDTO);
 
         if (order == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente ou pedido não encontrado.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido ou cliente não encontrado.");
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body("Cliente inserido no pedido com sucesso.");
-    }
-
-    @PatchMapping("/atualizar-produto")
-    public ResponseEntity<Object> atualizarProdutoEmPedido(@RequestBody @Valid ProdutoPedidoDTO produtoPedidoDTO) {
-        var order = service.patchProductInOrder(produtoPedidoDTO.id_produto(), produtoPedidoDTO.id_pedido());
-
-        if (order == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto ou pedido não encontrado.");
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body("Produto inserido no pedido com sucesso.");
+        return ResponseEntity.status(HttpStatus.OK).body("Pedido atualizado com sucesso.");
     }
 
     @PatchMapping("/atualizar-produtos")
@@ -65,7 +54,29 @@ public class PedidoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não encontrado ou algum produto não é válido.");
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body("Produtos inseridos no pedido com sucesso.");
+        return ResponseEntity.status(HttpStatus.OK).body("Produtos atualizados no pedido com sucesso.");
+    }
+
+    @PatchMapping("/inserir-produto")
+    public ResponseEntity<Object> inserirProdutoEmPedido(@RequestBody @Valid ProdutoPedidoDTO produtoPedidoDTO) {
+        var order = service.insertProductToOrder(produtoPedidoDTO.id_produto(), produtoPedidoDTO.id_pedido());
+
+        if (order == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não encontrado ou produto não é válido.");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body("Produto inserido no pedido com sucesso.");
+    }
+
+    @PatchMapping("/remover-produto")
+    public ResponseEntity<Object> removerProdutoEmPedido(@RequestBody @Valid ProdutoPedidoDTO produtoPedidoDTO) {
+        var order = service.removeProductFromOrder(produtoPedidoDTO.id_produto(), produtoPedidoDTO.id_pedido());
+
+        if (order == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não encontrado ou produto não é válido.");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body("Produto removido no pedido com sucesso.");
     }
 
     @PatchMapping("/desativar/{id}")

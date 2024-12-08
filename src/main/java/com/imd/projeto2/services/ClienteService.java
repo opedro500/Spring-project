@@ -40,7 +40,7 @@ public class ClienteService {
         return repository.save(clienteModel);
     }
 
-    public ClienteModel patchClient(Long id, ClienteDTO clienteDTO) {
+    public ClienteModel putClient(Long id, ClienteDTO clienteDTO) {
         Optional<ClienteModel> client = repository.findById(id);
 
         if (client.isEmpty()) {

@@ -38,14 +38,27 @@ public class PedidoModel {
         this.produtos.add(product);
     }
 
+    public void removeProduto(ProdutoModel product) {
+        if (this.produtos != null) {
+            this.produtos.remove(product);
+        }
+    }
+
     public PedidoModel() {
         this.ativo = true;
     }
 
-    public void carregarDTO(PedidoDTO pedidoDTO) {
+    public void carregarDTO(PedidoDTO pedidoDTO, ClienteModel cliente) {
         if (pedidoDTO.codigo() != null) {
             this.codigo = pedidoDTO.codigo();
         }
+        if (cliente != null) {
+            this.cliente = cliente;
+        }
+    }
+
+    public void limparProdutos() {
+        this.produtos.clear();
     }
 
     public void ativar() {

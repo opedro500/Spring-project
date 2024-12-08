@@ -45,12 +45,18 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.postClient(clienteDTO));
     }
 
-    @PatchMapping("/atualizar/{id}")
+    @PutMapping("/atualizar/{id}")
     public ResponseEntity<Object> atualizarCliente(@PathVariable(value = "id") Long id, @RequestBody ClienteDTO clienteDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.patchClient(id, clienteDTO));
+        var client = service.putClient(id, clienteDTO);
+
+        if (client == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado.");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body("Cliente atualizado com sucesso.");
     }
 
-    @PutMapping("/desativar/{id}")
+    @PatchMapping("/desativar/{id}")
     public ResponseEntity<Object> desativarCliente(@PathVariable(value = "id") Long id) {
         var client = service.disableClient(id);
 
@@ -61,7 +67,7 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.OK).body("Cliente desativado com sucesso.");
     }
 
-    @PutMapping("/ativar/{id}")
+    @PatchMapping("/ativar/{id}")
     public ResponseEntity<Object> ativarCliente(@PathVariable(value = "id") Long id) {
         var client = service.enableClient(id);
 

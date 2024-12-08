@@ -1,19 +1,16 @@
 package com.imd.projeto2.services;
 
-import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
-import com.imd.projeto2.DTO.ClienteDTO;
 import com.imd.projeto2.DTO.PedidoDTO;
 import com.imd.projeto2.models.ClienteModel;
 import com.imd.projeto2.models.PedidoModel;
 import com.imd.projeto2.models.ProdutoModel;
-import com.imd.projeto2.repositories.ClienteRepository;
 import com.imd.projeto2.repositories.PedidoRepository;
-import com.imd.projeto2.repositories.ProdutoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -43,62 +40,116 @@ public class PedidoService {
 
     public PedidoModel postOrder(PedidoDTO pedidoDTO) {
         PedidoModel pedidoModel = new PedidoModel();
-        BeanUtils.copyProperties(pedidoDTO, pedidoModel);
+        BeanUtils.copyProperties(pedidoDTO, pedidoModel, "id_cliente", "ids_produtos");
+
+        if (pedidoDTO.id_cliente() != null) {
+            Optional<ClienteModel> clienteOptional = clientService.repository().findById(pedidoDTO.id_cliente());
+
+            if (clienteOptional.isPresent()) {
+                ClienteModel clienteModel = clienteOptional.get();
+                pedidoModel.setCliente(clienteModel);
+            } else {
+                return null;
+            }
+        }
+
+        if (pedidoDTO.ids_produtos() != null && !pedidoDTO.ids_produtos().isEmpty()) {
+            List<ProdutoModel> produtos = pedidoDTO.ids_produtos().stream()
+                    .map(id -> productService.repository().findById(id).orElse(null))
+                    .filter(Objects::nonNull)
+                    .toList();
+
+            if (produtos.isEmpty()) {
+                return null;
+            }
+
+            pedidoModel.setProdutos(produtos);
+        }
 
         return repository.save(pedidoModel);
     }
 
-    public PedidoModel patchClientInOrder(Long id_client, Long id_order) {
-        Optional<ClienteModel> clientOpitional = clientService.repository().findById(id_client);
-        Optional<PedidoModel> orderOpitional = repository.findById(id_order);
-
-        if(clientOpitional.isEmpty() || orderOpitional.isEmpty()){
+    public PedidoModel patchOrder(Long id_pedido, PedidoDTO pedidoDTO) {
+        Optional<PedidoModel> orderOptional = repository.findById(id_pedido);
+        if (orderOptional.isEmpty()) {
             return null;
         }
 
-        ClienteModel client = clientOpitional.get();
-        PedidoModel order = orderOpitional.get();
+        PedidoModel pedidoModel = orderOptional.get();
 
-        order.setCliente(client);
+        ClienteModel cliente = null;
+        if (pedidoDTO.id_cliente() != null) {
+            Optional<ClienteModel> clienteOptional = clientService.repository().findById(pedidoDTO.id_cliente());
+
+            if (clienteOptional.isEmpty()) {
+                return null;
+            }
+
+            cliente = clienteOptional.get();
+        }
+
+        pedidoModel.carregarDTO(pedidoDTO, cliente);
+
+        return repository.save(pedidoModel);
+    }
+
+    public PedidoModel patchProductsInOrder(List<Long> id_product, Long id_order) {
+        Optional<PedidoModel> orderOptional = repository.findById(id_order);
+
+        if (orderOptional.isEmpty()) {
+            return null;
+        }
+
+        PedidoModel order = orderOptional.get();
+        order.limparProdutos();
+
+        for (Long id : id_product) {
+            Optional<ProdutoModel> productOptional = productService.repository().findById(id);
+
+            if (productOptional.isPresent()) {
+                ProdutoModel product = productOptional.get();
+                order.setProduto(product);
+            } else {
+                return null;
+            }
+        }
 
         return repository.save(order);
     }
 
-    public PedidoModel patchProductInOrder(Long id_product, Long id_order) {
-        Optional<ProdutoModel> productOpitional = productService.repository().findById(id_product);
-        Optional<PedidoModel> orderOpitional = repository.findById(id_order);
 
-        if(productOpitional.isEmpty() || orderOpitional.isEmpty()){
+    public PedidoModel insertProductToOrder(Long id_product, Long id_order) {
+        Optional<ProdutoModel> productOptional = productService.repository().findById(id_product);
+        Optional<PedidoModel> orderOptional = repository.findById(id_order);
+
+        if (productOptional.isEmpty() || orderOptional.isEmpty()) {
             return null;
         }
 
-        ProdutoModel product = productOpitional.get();
-        PedidoModel order = orderOpitional.get();
+        PedidoModel order = orderOptional.get();
+        ProdutoModel product = productOptional.get();
 
         order.setProduto(product);
 
         return repository.save(order);
     }
 
-    public PedidoModel patchProductsInOrder(List<Long> id_product, Long id_order) {
-        Optional<PedidoModel> orderOpitional = repository.findById(id_order);
+    public PedidoModel removeProductFromOrder(Long id_product, Long id_order) {
+        Optional<ProdutoModel> productOptional = productService.repository().findById(id_product);
+        Optional<PedidoModel> orderOptional = repository.findById(id_order);
 
-        if(orderOpitional.isEmpty()){
+        if (productOptional.isEmpty() || orderOptional.isEmpty()) {
             return null;
         }
 
-        PedidoModel order = orderOpitional.get();
+        PedidoModel order = orderOptional.get();
+        ProdutoModel product = productOptional.get();
 
-        for(Long id : id_product){
-            ProdutoModel product = productService.repository().findById(id).get();
-
-            if(product != null){
-                order.setProduto(product);
-            }
-        }
+        order.removeProduto(product);
 
         return repository.save(order);
     }
+
 
     public boolean disableOrder(Long id) {
         Optional<PedidoModel> order = repository.findById(id);

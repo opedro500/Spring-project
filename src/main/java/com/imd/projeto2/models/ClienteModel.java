@@ -30,14 +30,6 @@ public class ClienteModel {
         this.ativo = true;
     }
 
-    public ClienteModel(ClienteDTO clienteDTO) {
-        this.nome = clienteDTO.nome();
-        this.cpf = clienteDTO.cpf();
-        this.genero = clienteDTO.genero();
-        this.data_nascimento = clienteDTO.data_nascimento();
-        this.ativo = true;
-    }
-
     public void carregarDTO(ClienteDTO clienteDTO) {
         if (clienteDTO.nome() != null) {
             this.nome = clienteDTO.nome();

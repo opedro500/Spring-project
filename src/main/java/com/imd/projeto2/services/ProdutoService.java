@@ -37,7 +37,7 @@ public class ProdutoService {
         return repository.save(produtoModel);
     }
 
-    public ProdutoModel patchProduct(Long id, ProdutoDTO produtoDTO) {
+    public ProdutoModel putProduct(Long id, ProdutoDTO produtoDTO) {
         Optional<ProdutoModel> product = repository.findById(id);
 
         if (product.isEmpty()) {
